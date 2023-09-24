@@ -42,17 +42,17 @@ public class Password
 
     }
 
-    public int GetMinimumStrongPasswordSteps()
-    {
-        var steps = 0;
+    //public int GetMinimumStrongPasswordSteps()
+    //{
+    //    var steps = 0;
 
-        if (!lengthIsValid)
-        {
+    //    if (!lengthIsValid)
+    //    {
 
 
 
-        }
-    }
+    //    }
+    //}
 
     private void SetPasswordLengthValidity(string password)
     {
