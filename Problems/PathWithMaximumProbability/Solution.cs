@@ -2,6 +2,10 @@
 
 public class Solution
 {
+    public double MaxProbability(PathWithMaximumProbabilityProblem p)
+        => MaxProbability(p.n, p.edges, p.succProb, p.startNode, p.endNode);
+
+
     public double MaxProbability(
         int n,
         int[][] edges,
@@ -10,6 +14,12 @@ public class Solution
         int end_node)
     {
         var graph = BuildGraph(n, edges, succProb);
+
+        if (!graph.DoesVertexExist(start_node) ||
+            !graph.DoesVertexExist(end_node))
+        {
+            return 0;
+        }
 
         return graph.BestPath(start_node, end_node);
     }

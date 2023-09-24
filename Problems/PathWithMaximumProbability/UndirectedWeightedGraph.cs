@@ -4,7 +4,6 @@ public class UndirectedWeightedGraph
 {
     public double[,] Matrix { get; set; }
     public Dictionary<int, Vertex> Vertices { get; set; }
-
     public UndirectedWeightedGraph(int n)
     {
         Matrix = new double[n, n];
@@ -34,19 +33,12 @@ public class UndirectedWeightedGraph
         Vertices[v2].AddNeighbor(vertex1);
     }
 
-
     /*
      * DFS, Use heuristics of local next path's best probability as priority
-     * 
+     * Memoize best known path to vertices
      */
     public double BestPath(int startNode, int endNode, HashSet<int>? visited = null)
     {
-        if (!DoesVertexExist(startNode, out var vertex) ||
-            !DoesVertexExist(endNode, out var endVertex))
-        {
-            return 0;
-        }
-
         if (startNode == endNode)
         {
             return 1;
@@ -58,7 +50,7 @@ public class UndirectedWeightedGraph
         visited = BuildNewVisitedSet(visited);
         visited.Add(startNode);
 
-        foreach (var node in vertex!.UnvisitedNeighbors(visited))
+        foreach (var node in Vertices[startNode]!.UnvisitedNeighbors(visited))
         {
             probability = Matrix[startNode, node.Id] * BestPath(node.Id, endNode, visited);
 
@@ -81,11 +73,9 @@ public class UndirectedWeightedGraph
         return new HashSet<int>(visited);
     }
 
-    public bool DoesVertexExist(int id, out Vertex? vertex)
+    public bool DoesVertexExist(int id)
     {
-        vertex = null;
-
-        if (!Vertices.TryGetValue(id, out vertex))
+        if (!Vertices.TryGetValue(id, out var v))
         {
             return false;
         }
