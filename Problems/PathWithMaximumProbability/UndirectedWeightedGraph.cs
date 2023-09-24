@@ -2,19 +2,16 @@
 
 public class UndirectedWeightedGraph
 {
-    public double[,] Matrix { get; set; }
     public Dictionary<int, Vertex> Vertices { get; set; }
+    public bool[] DiscoveryQueue { get; set; }
     public UndirectedWeightedGraph(int n)
     {
-        Matrix = new double[n, n];
         Vertices = new Dictionary<int, Vertex>();
+        DiscoveryQueue = new bool[n];
     }
 
     public void InsertEdge(int v1, int v2, double weight)
     {
-        Matrix[v1, v2] = weight;
-        Matrix[v2, v1] = weight;
-
         // if v1 isn't in the graph yet
         if (!Vertices.TryGetValue(v1, out var vertex1))
         {
@@ -29,48 +26,47 @@ public class UndirectedWeightedGraph
             Vertices.Add(v2, vertex2);
         }
 
-        Vertices[v1].AddNeighbor(vertex2);
-        Vertices[v2].AddNeighbor(vertex1);
+        Vertices[v1].AddNeighbor(vertex2, weight);
+        Vertices[v2].AddNeighbor(vertex1, weight);
     }
 
     /*
-     * DFS, Use heuristics of local next path's best probability as priority
-     * Memoize best known path to vertices
+     * SPFA algorithm
      */
-    public double BestPath(int startNode, int endNode, HashSet<int>? visited = null)
+    public double BestPath(int startNode, int endNode, double[] dp)
     {
-        if (startNode == endNode)
+        Vertex node;
+        Vertex neighbor;
+        double weight;
+
+        var prob = 0.0;
+
+        var q = new Queue<int>();
+
+        DiscoverNode(startNode, q);
+
+        while (q.Count > 0)
         {
-            return 1;
-        }
+            node = GetNextVertex(q);
 
-        var probability = 0.0;
-        var bestProb = 0.0;
-
-        visited = BuildNewVisitedSet(visited);
-        visited.Add(startNode);
-
-        foreach (var node in Vertices[startNode]!.UnvisitedNeighbors(visited))
-        {
-            probability = Matrix[startNode, node.Id] * BestPath(node.Id, endNode, visited);
-
-            if (probability > bestProb)
+            for (var i = 0; i < node.Neighbors.Count; i++)
             {
-                bestProb = probability;
+                neighbor = node.Neighbors.ElementAt(i).Item1;
+                weight = node.Neighbors.ElementAt(i).Item2;
+
+                prob = dp[node.Id] * weight;
+
+                // if we just found a better path to "neighbor" than we knew about previously,
+                if (prob > dp[neighbor.Id])
+                {
+                    dp[neighbor.Id] = prob;
+
+                    DiscoverNode(neighbor.Id, q);
+                }
             }
         }
 
-        return bestProb;
-    }
-
-    public HashSet<int> BuildNewVisitedSet(HashSet<int>? visited)
-    {
-        if (visited == null)
-        {
-            return new HashSet<int>();
-        }
-
-        return new HashSet<int>(visited);
+        return dp[endNode];
     }
 
     public bool DoesVertexExist(int id)
@@ -82,37 +78,37 @@ public class UndirectedWeightedGraph
 
         return true;
     }
-}
 
+    private Vertex GetNextVertex(Queue<int> q)
+    {
+        var nodeId = q.Dequeue();
+        DiscoveryQueue[nodeId] = false;
+        return Vertices[nodeId];
+    }
+
+    private void DiscoverNode(int id, Queue<int> q)
+    {
+        if (!DiscoveryQueue[id])
+        {
+            q.Enqueue(id);
+            DiscoveryQueue[id] = true;
+        }
+    }
+}
 
 public class Vertex
 {
     public int Id { get; set; }
-    public HashSet<Vertex> Neighbors { get; set; }
+    public HashSet<(Vertex, double)> Neighbors { get; set; }
 
     public Vertex(int id)
     {
         Id = id;
-        Neighbors = new HashSet<Vertex>();
+        Neighbors = new HashSet<(Vertex, double)>();
     }
 
-    public void AddNeighbor(Vertex vertex)
+    public void AddNeighbor(Vertex vertex, double weight)
     {
-        Neighbors.Add(vertex);
-    }
-
-    public HashSet<Vertex> UnvisitedNeighbors(HashSet<int> visited)
-    {
-        var res = new HashSet<Vertex>();
-
-        foreach (var neighbor in Neighbors)
-        {
-            if (!visited.Contains(neighbor.Id))
-            {
-                res.Add(neighbor);
-            }
-        }
-
-        return res;
+        Neighbors.Add((vertex, weight));
     }
 }

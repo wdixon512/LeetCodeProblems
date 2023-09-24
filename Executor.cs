@@ -36,6 +36,9 @@ public class Executor
         var solution = new Problems.PathWithMaximumProbability.Solution();
 
         var testCase1 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\PathWithMaximumProbability\\TestCase1.json");
+        var testCase2 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\PathWithMaximumProbability\\TestCase2.json");
+
         Console.WriteLine(solution.MaxProbability(testCase1));
+        Console.WriteLine(solution.MaxProbability(testCase2));
     }
 }

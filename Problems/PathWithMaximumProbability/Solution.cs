@@ -1,4 +1,6 @@
-﻿namespace LeetCodeProblems.Problems.PathWithMaximumProbability;
+﻿using System.Numerics;
+
+namespace LeetCodeProblems.Problems.PathWithMaximumProbability;
 
 public class Solution
 {
@@ -21,7 +23,7 @@ public class Solution
             return 0;
         }
 
-        return graph.BestPath(start_node, end_node);
+        return graph.BestPath(start_node, end_node, InitDpList(start_node, n));
     }
 
     public UndirectedWeightedGraph BuildGraph(int n, int[][] edges, double[] succProb)
@@ -34,6 +36,19 @@ public class Solution
         }
 
         return graph;
+    }
+    public double[] InitDpList(int startNode, int n)
+    {
+        var list = new double[n];
+
+        for (var i = 0; i < n; i++)
+        {
+            list[i] = 0;            
+        }
+
+        list[startNode] = 1.0;
+
+        return list;
     }
 }
 
