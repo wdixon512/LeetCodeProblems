@@ -1,4 +1,5 @@
 ﻿using LeetCodeProblems.Helpers;
+using LeetCodeProblems.Problems.ChampagneTower;
 using LeetCodeProblems.Problems.LongestWordChain;
 using LeetCodeProblems.Problems.PathWithMaximumProbability;
 
@@ -10,7 +11,8 @@ public class Executor
     {
         //ClimbingStairsProblem();
         //LongestWordChainProblem();
-        PathWithMaxProbability();
+        //PathWithMaxProbability();
+        ChampagneTower();
     }
 
     private static void ClimbingStairsProblem()
@@ -40,5 +42,14 @@ public class Executor
 
         Console.WriteLine(solution.MaxProbability(testCase1));
         Console.WriteLine(solution.MaxProbability(testCase2));
+    }
+    private static void ChampagneTower()
+    {
+        var testcase1 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\ChampagneTower\\TestCase1.json");
+        //var testcase2 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\ChampagneTower\\TestCase2.json");
+        var champSolution = new Problems.ChampagneTower.Solution();
+
+        Console.WriteLine(champSolution.ChampagneTower(testcase1));
+        //Console.WriteLine(champSolution.ChampagneTower(testcase2));
     }
 }

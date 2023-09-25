@@ -71,7 +71,7 @@ public class UndirectedWeightedGraph
 
     public bool DoesVertexExist(int id)
     {
-        if (!Vertices.TryGetValue(id, out var v))
+        if (!Vertices.TryGetValue(id, out _))
         {
             return false;
         }
