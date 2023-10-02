@@ -1,12 +1,18 @@
 ﻿using Newtonsoft.Json;
 
+using static System.IO.Directory;
+
 namespace LeetCodeProblems.Helpers;
 
 public static class TestCaseImportHelper
 {
     public static T ImportDataFromFile<T>(string filePath) where T : class
     {
-        var fileContents = File.ReadAllText(filePath);
+        var currDir = GetCurrentDirectory().Replace("\\bin\\Debug\\net6.0", string.Empty);
+
+        var fullPath = Path.Combine(currDir, filePath);
+
+        var fileContents = File.ReadAllText(fullPath);
 
         var convertedContents = JsonConvert.DeserializeObject<T>(fileContents);
 

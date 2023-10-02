@@ -37,15 +37,15 @@ public class Executor
     {
         var solution = new Problems.PathWithMaximumProbability.Solution();
 
-        var testCase1 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\PathWithMaximumProbability\\TestCase1.json");
-        var testCase2 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\PathWithMaximumProbability\\TestCase2.json");
+        var testCase1 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("Problems\\PathWithMaximumProbability\\TestCase1.json");
+        var testCase2 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("Problems\\PathWithMaximumProbability\\TestCase2.json");
 
         Console.WriteLine(solution.MaxProbability(testCase1));
         Console.WriteLine(solution.MaxProbability(testCase2));
     }
     private static void ChampagneTower()
     {
-        var testcase1 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\ChampagneTower\\TestCase1.json");
+        var testcase1 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase1.json");
         //var testcase2 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\ChampagneTower\\TestCase2.json");
         var champSolution = new Problems.ChampagneTower.Solution();
 
