@@ -1,6 +1,6 @@
 ﻿namespace LeetCodeProblems.Problems.StrongPasswordChecker;
 
-public class Solution
+public partial class Solution
 {
     public int StrongPasswordChecker(string password)
     {

@@ -1,5 +1,7 @@
-﻿namespace LeetCodeProblems.Problems.ChampagneTower;
-public class Solution
+﻿using LeetCodeProblems.Problems.ChampagneTower;
+
+namespace LeetCodeProblems.Problems;
+public partial class Solution
 {
     public double ChampagneTower(ChampagneTowerProblem p)
         => ChampagneTower(p.poured, p.queryRow, p.queryGlass);
@@ -8,33 +10,10 @@ public class Solution
     {
         var tower = new Tower();
 
-        Console.WriteLine($"CupsRequiredToFillRow: {CupsRequiredToFillRow(query_row)}");
+        if (poured > tower.CupsRequiredToFillRow(query_row)) return 1;
 
         tower.Fill(poured);
 
         return tower.FindValue(query_row, query_glass);
-    }
-
-    private int TotalCupsInRow(int row)
-    {
-        var sum = 0;
-
-        for (var i = 1; i <= row; i++)
-        {
-            sum += i;
-        }
-        return sum;
-    }
-
-    public static double CupsRequiredToFillRow(int row)
-    {
-        double sum = 0;
-
-        for (var i = 0; i < row; i++)
-        {
-            sum += Math.Pow(i, 2);
-        }
-
-        return sum;
     }
 }

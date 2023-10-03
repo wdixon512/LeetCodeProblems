@@ -1,18 +1,23 @@
-﻿using LeetCodeProblems.Helpers;
+﻿using LeetCodeProblems.Abstractions;
+using LeetCodeProblems.Helpers;
+using LeetCodeProblems.Problems;
 using LeetCodeProblems.Problems.ChampagneTower;
 using LeetCodeProblems.Problems.LongestWordChain;
 using LeetCodeProblems.Problems.PathWithMaximumProbability;
 
+using System.Runtime.CompilerServices;
+
 namespace LeetCodeProblems;
 
-public class Executor
+public class LeetCodeService
 {
+    private static Solution solution { get; set; } = new Solution();
     static void Main(string[] args)
     {
         //ClimbingStairsProblem();
         //LongestWordChainProblem();
         //PathWithMaxProbability();
-        ChampagneTower();
+        //ChampagneTower();
     }
 
     private static void ClimbingStairsProblem()
@@ -30,13 +35,11 @@ public class Executor
         Console.WriteLine(longestWordChain.LongestStrChain(new[] { "a", "ab", "ac", "bd", "abc", "abd", "abdd" }));
         Console.WriteLine(longestWordChain.LongestStrChain(new[] { "a", "b", "ab", "bac" }));
         Console.WriteLine(longestWordChain.LongestStrChain(TestCaseImportHelper.ImportDataFromFile<string[]>(
-            "C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\LongestWordChain\\TestCases\\LongTestCase1.txt")));
+            "Problems\\LongestWordChain\\TestCases\\LongTestCase1.txt")));
 
     }
     private static void PathWithMaxProbability()
     {
-        var solution = new Problems.PathWithMaximumProbability.Solution();
-
         var testCase1 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("Problems\\PathWithMaximumProbability\\TestCase1.json");
         var testCase2 = TestCaseImportHelper.ImportDataFromFile<PathWithMaximumProbabilityProblem>("Problems\\PathWithMaximumProbability\\TestCase2.json");
 
@@ -45,11 +48,32 @@ public class Executor
     }
     private static void ChampagneTower()
     {
-        var testcase1 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase1.json");
-        //var testcase2 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("C:\\Users\\isagn\\source\\repos\\LeetCodeProblems\\Problems\\ChampagneTower\\TestCase2.json");
-        var champSolution = new Problems.ChampagneTower.Solution();
+        //var testcase1 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase1.json");
+        //var testcase2 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase2.json");
+        //var testcase3 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase3.json");
 
-        Console.WriteLine(champSolution.ChampagneTower(testcase1));
+        var tests = TestCaseImportHelper.ImportTestsForProblem<ChampagneTowerProblem>(nameof(solution.ChampagneTower));
+
+        Run(tests, t => solution.ChampagneTower(t));
+        //Console.WriteLine(champSolution.ChampagneTower(testcase1));
         //Console.WriteLine(champSolution.ChampagneTower(testcase2));
+        //Console.WriteLine(solution.ChampagneTower(testcase3));
+
+    }
+
+    public static void Run<T>(IEnumerable<T> tests, Func<T, double> testFunc)
+        where T : LeetCodeProblem
+    {
+        try
+        {
+            foreach (var test in tests)
+            {
+                Console.WriteLine(testFunc.Invoke(test));
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unable to run test {ex}");
+        }
     }
 }

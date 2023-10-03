@@ -1,6 +1,8 @@
-﻿namespace LeetCodeProblems.Problems.ChampagneTower;
+﻿using LeetCodeProblems.Abstractions;
 
-public class ChampagneTowerProblem
+namespace LeetCodeProblems.Problems.ChampagneTower;
+
+public class ChampagneTowerProblem : LeetCodeProblem
 {
     public int poured { get; set; }
     public int queryRow { get; set; }

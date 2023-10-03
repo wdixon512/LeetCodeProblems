@@ -50,6 +50,18 @@ public class Tower
     {
         return Glasses[row, col].Value;
     }
+
+    public double CupsRequiredToFillRow(int row)
+    {
+        double sum = 0;
+
+        for (var i = 0; i <= row; i++)
+        {
+            sum += Math.Pow(2, i);
+        }
+
+        return sum;
+    }
 }
 
 public class Glass

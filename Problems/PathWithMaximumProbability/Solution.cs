@@ -1,12 +1,11 @@
-﻿using System.Numerics;
+﻿using LeetCodeProblems.Problems.PathWithMaximumProbability;
 
-namespace LeetCodeProblems.Problems.PathWithMaximumProbability;
+namespace LeetCodeProblems.Problems;
 
-public class Solution
+public partial class Solution
 {
     public double MaxProbability(PathWithMaximumProbabilityProblem p)
         => MaxProbability(p.n, p.edges, p.succProb, p.startNode, p.endNode);
-
 
     public double MaxProbability(
         int n,
