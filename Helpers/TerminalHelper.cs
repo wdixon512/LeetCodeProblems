@@ -1,6 +1,4 @@
-﻿using LeetCodeProblems.Options;
-
-using Spectre.Console;
+﻿using Spectre.Console;
 
 namespace LeetCodeProblems.Helpers;
 
@@ -15,5 +13,8 @@ public static class TerminalHelper
                .InstructionsText(
                    "[grey](Press [blue]<space>[/] to toggle a problem, " +
                    "[green]<enter>[/] to accept)[/]")
-               .AddChoices(LeetProblems.All));
+               .AddChoices(Problems));
+
+    private static List<string> Problems
+        => LeetCodeService.GetLeetCodeSolutionMethods().Select(m => m.Name).ToList();
 }

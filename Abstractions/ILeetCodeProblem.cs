@@ -1,5 +1,5 @@
 ﻿namespace LeetCodeProblems.Abstractions;
 
-public abstract class LeetCodeProblem
+public interface ILeetCodeProblem
 {
 }
