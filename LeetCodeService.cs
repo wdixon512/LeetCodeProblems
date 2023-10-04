@@ -1,11 +1,14 @@
 ﻿using LeetCodeProblems.Abstractions;
+using LeetCodeProblems.Attributes;
 using LeetCodeProblems.Helpers;
 using LeetCodeProblems.Problems;
 using LeetCodeProblems.Problems.ChampagneTower;
 using LeetCodeProblems.Problems.LongestWordChain;
 using LeetCodeProblems.Problems.PathWithMaximumProbability;
 
-using System.Runtime.CompilerServices;
+using System.Reflection;
+
+using static LeetCodeProblems.Helpers.TestCaseImportHelper;
 
 namespace LeetCodeProblems;
 
@@ -18,6 +21,37 @@ public class LeetCodeService
         //LongestWordChainProblem();
         //PathWithMaxProbability();
         //ChampagneTower();
+        var selections = TerminalHelper.PromptProblemSelection();
+
+        var solutionMethods = selections?
+                                .Select(GetRequestedSolutionMethod)
+                                .Where(m => m is not null)
+                                .ToList();
+
+        if (solutionMethods is null)
+        {
+            throw new NullReferenceException($"Could not find method any of the selected methods. Did you forget to add the Data attribute?");
+        }
+
+        foreach (var method in solutionMethods.Where(m => m is not null))
+        {
+            var firstParam = method?.GetParameters().FirstOrDefault();
+
+            var paramVal = firstParam?.ParameterType;
+
+            MethodInfo? testImporterMethod = typeof(TestCaseImportHelper).GetMethod(nameof(ImportTestsForProblem));
+
+            if (testImporterMethod is not null &&
+                paramVal is not null &&
+                paramVal.IsAssignableTo(typeof(LeetCodeProblem)))
+            {
+                MethodInfo genMethod = testImporterMethod.MakeGenericMethod((dynamic)paramVal);
+
+                var tests = genMethod.Invoke(null, new object[] { method!.Name });
+
+                Run(tests, t => method.Invoke(solution, new object[] { t }));
+            }
+        }
     }
 
     private static void ClimbingStairsProblem()
@@ -46,29 +80,23 @@ public class LeetCodeService
         Console.WriteLine(solution.MaxProbability(testCase1));
         Console.WriteLine(solution.MaxProbability(testCase2));
     }
-    private static void ChampagneTower()
-    {
-        //var testcase1 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase1.json");
-        //var testcase2 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase2.json");
-        //var testcase3 = TestCaseImportHelper.ImportDataFromFile<ChampagneTowerProblem>("Problems\\ChampagneTower\\TestCase3.json");
 
-        var tests = TestCaseImportHelper.ImportTestsForProblem<ChampagneTowerProblem>(nameof(solution.ChampagneTower));
-
-        Run(tests, t => solution.ChampagneTower(t));
-        //Console.WriteLine(champSolution.ChampagneTower(testcase1));
-        //Console.WriteLine(champSolution.ChampagneTower(testcase2));
-        //Console.WriteLine(solution.ChampagneTower(testcase3));
-
-    }
-
-    public static void Run<T>(IEnumerable<T> tests, Func<T, double> testFunc)
-        where T : LeetCodeProblem
+    public static void Run(object? tests, Func<object, object> testFunc)
     {
         try
         {
-            foreach (var test in tests)
+            if (tests is not null && tests.GetType().GetGenericTypeDefinition() == (typeof(List<>)))
             {
-                Console.WriteLine(testFunc.Invoke(test));
+                var testList = (IEnumerable<LeetCodeProblem>)tests;
+
+                foreach (var test in testList)
+                {
+                    Console.WriteLine(testFunc.Invoke(test));
+                }
+            }
+            else
+            {
+                throw new Exception("Tests were not an IEnumerable type.");
             }
         }
         catch (Exception ex)
@@ -76,4 +104,24 @@ public class LeetCodeService
             Console.WriteLine($"Unable to run test {ex}");
         }
     }
+    private static MethodInfo? GetRequestedSolutionMethod(string problem)
+    {
+        var requestedMethod = typeof(Solution)
+                                .GetMethods()
+                                .FirstOrDefault(m => m.GetCustomAttribute<LeetSolutionMethodAttribute>()?.ProblemName == problem);
+
+        if (DoesMethodHaveLeetCodeProblemParam(requestedMethod))
+        {
+            return requestedMethod;
+        }
+
+        return null;
+    }
+
+    private static bool DoesMethodHaveLeetCodeProblemParam(MethodInfo? method)
+        => method?
+            .GetParameters()
+            .FirstOrDefault()?
+            .ParameterType
+            .IsAssignableTo(typeof(LeetCodeProblem)) ?? false;
 }

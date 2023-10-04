@@ -1,8 +1,11 @@
-﻿using LeetCodeProblems.Problems.ChampagneTower;
+﻿using LeetCodeProblems.Attributes;
+using LeetCodeProblems.Options;
+using LeetCodeProblems.Problems.ChampagneTower;
 
 namespace LeetCodeProblems.Problems;
 public partial class Solution
 {
+    [LeetSolutionMethod(LeetProblems.ChampagneTower)]
     public double ChampagneTower(ChampagneTowerProblem p)
         => ChampagneTower(p.poured, p.queryRow, p.queryGlass);
 
